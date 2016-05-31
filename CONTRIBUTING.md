@@ -14,7 +14,12 @@ Test can be run as follows:
 
 ## Commit messages
 
-Commit messages must start with a short summary line. It can include a more detailed description preceded by an empty line. It must end with the DCO sign-off. 
+There are rules to commit messages which are ensured by GitCop. After you created a pull request, you will get several automated feedbacks including one from GitCop. The rules that are checked against are:
+
+* Commit messages must start with a short summary line.
+* It can include a more detailed description preceded by an empty line.
+* It must end with the DCO sign-off. 
+* No line should be more than 80 characters long. (Simply use line break to break long lines)
 
 The [Developer Certificate of Origin (DCO)](DCO1.1.txt) certifies that you wrote the patch or otherwise have the right to pass it on as an open-source patch. 
 
@@ -24,13 +29,12 @@ In order to sign it, simply include the following lines at the end of the commit
 
 Use your real name and a valid email address.
 
-We use GitCop to check whether the commit messages comply the rules.
-
 Example commit message:
 ```
 Add tests for requester.py
 
-It adds tests that verify the send_request function by sending dummy responses using httpretty.
+It adds tests that verify the send_request function by sending dummy responses
+using httpretty.
 
 Signed-off-by: Ye Na Rhee <yrhee@de.ibm.com>
 ```
