@@ -1,0 +1,168 @@
+dashboard:
+  title: zVM Status
+  timezone: browser
+  rows:
+    - title: Description
+      height: 50px
+      panels:
+        - title: Description
+          content: |
+            **This dashboard is managed by [Grafyaml](http://docs.openstack.org/infra/system-config/grafyaml.html).**
+          type: text
+
+    - title: CPU & Memory
+      height: 200px
+      panels:
+        - title: CPU Count
+          span: 2
+          sparkline:
+            show: false
+            full: false
+          datasource: prometheus
+          targets:
+            - expr: zvm_system_cpu_count
+          type: singlestat
+          valueName: current
+
+        - title: CPU & Memory Use
+          span: 10
+          datasource: prometheus
+          targets:
+            - expr: zvm_system_cpu_in_use
+              legendFormat: cpu
+            - expr: zvm_system_memory_in_use / zvm_system_memory_total
+              legendFormat: memory
+          nullPointMode: 'null'
+          type: graph
+          seriesOverrides:
+            - alias: cpu
+              lines: true
+              fill: 0
+            - alias: memory
+              lines: true
+              fill: 0
+          y_formats:
+            - percentunit
+            - none
+      showTitle: true
+
+    - title: Disk
+      height: 200px
+      panels:
+        - title: In Use
+          span: 2
+          sparkline:
+            show: true
+            full: false
+          datasource: prometheus
+          targets:
+            - expr: count(zvm_disk_status{volume=~'OS2P.*'})-sum(zvm_disk_status{volume=~'OS2P.*'})
+          type: singlestat
+          valueName: current
+
+        - title: Free
+          span: 2
+          sparkline:
+            show: true
+            full: false
+          datasource: prometheus
+          targets:
+            - expr: sum(zvm_disk_status)
+          type: singlestat
+          valueName: current
+
+        - title: Disk Utilization
+          span: 8
+          datasource: prometheus
+          targets:
+            - expr: 1-sum(zvm_disk_space_free{volume=~'OS2P.*'}) / sum(zvm_disk_space_total{volume=~'OS2P.*'})
+              legendFormat: disk
+          nullPointMode: 'null'
+          type: graph
+          seriesOverrides:
+            - alias: disk
+              legend: false
+          y_formats:
+            - percentunit
+            - none
+      showTitle: true
+
+    - title: Paging & Spool
+      height: 200px
+      panels:
+        - title: Total Allocated Pages
+          span: 4
+          sparkline: 
+            show: false
+            full: false
+          datasource: prometheus
+          targets:
+            - expr: zvm_page_allocated_total
+          type: singlestat
+          valueName: current
+
+        - title: Pages in Use
+          span: 2
+          sparkline: 
+            show: true
+            full: true
+          datasource: prometheus
+          targets:
+            - expr: zvm_page_used_total/zvm_page_allocated_total
+          format: percentunit
+          type: singlestat
+          valueName: current
+
+        - title: Spool in Use
+          span: 2
+          sparkline: 
+            show: true
+            full: true
+          datasource: prometheus
+          targets:
+            - expr: zvm_spool_used_total/zvm_spool_allocated_total
+          format: percentunit
+          type: singlestat
+          valueName: current
+
+        - title: Total Allocated Spool
+          span: 4
+          sparkline: 
+            show: false
+            full: false
+          datasource: prometheus
+          targets:
+            - expr: zvm_spool_allocated_total
+          type: singlestat
+          valueName: current
+
+        - title: Total Used Pages
+          span: 6
+          datasource: prometheus
+          targets:
+            - expr: zvm_page_used_total
+              legendFormat: page
+          nullPointMode: 'null'
+          type: graph
+          seriesOverrides:
+            - alias: page
+              legend: false
+          y_formats:
+            - none
+            - none
+
+        - title: Total Used Spool
+          span: 6
+          datasource: prometheus
+          targets:
+            - expr: zvm_spool_used_total
+              legendFormat: spool
+          nullPointMode: 'null'
+          type: graph
+          seriesOverrides:
+            - alias: spool
+              legend: false
+          y_formats:
+            - none
+            - none
+      showTitle: true
